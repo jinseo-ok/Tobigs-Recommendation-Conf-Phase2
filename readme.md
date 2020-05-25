@@ -7,9 +7,8 @@
 |담당자|분류|설명|해당 파일|
 |--|--|--|--|
 |SY|EDA|Trip Advisor 데이터의 간단한 EDA|[링크](src/data_prep/SY_TA_EDA.ipynb)|
-
-
-
+|YN|Model|FM 모델|[링크](src/model/YN_Factorization_Matrix.ipynb)|
+|YN|Model|SVD 모델|[링크](src/model/YN_TripAdvisor_SVD_python.ipynb)|
 
 
 ## Getting Started
@@ -25,7 +24,15 @@
 1. 경로 접근시 통일성을 위해 반드시 `os.path.join("..","..","data","data.json")` 와 같은 path join을 사용한다.
 2. 절대 `pd.read_csv("C://tobigs//data")` 이런 코드가 있어선 안된다.
 
+#### 기본 파일 불러오기 
 
+```
+import pandas as pd 
+import os
+
+df = pd.read_json(os.path.join("..","..","data","TA_User_Reviws_Korea_all.json"))
+df.head(5)
+```
 
 
 ## How to use github
