@@ -1,4 +1,4 @@
-data/TA_*.json
+data/*.json
 data/*.csv
 data/*.zip
 .DS_Store
