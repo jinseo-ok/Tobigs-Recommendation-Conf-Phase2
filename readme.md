@@ -2,6 +2,16 @@
 
 > Trip Advisor 데이터 분석 및 CF 기반 모델링
 
+## Dashboard
+
+|담당자|분류|설명|해당 파일|
+|--|--|--|--|
+|SY|EDA|Trip Advisor 데이터의 간단한 EDA|[링크](src/data_prep/SY_TA_EDA.ipynb)|
+
+
+
+
+
 ## Getting Started
 
 #### Convention
