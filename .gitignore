@@ -1,0 +1,4 @@
+data/*.json
+data/*.csv
+data/*
+.DS_Store
