@@ -9,6 +9,9 @@
 |SY|EDA|Trip Advisor 데이터의 간단한 EDA|[링크](src/data_prep/SY_TA_EDA.ipynb)|
 |YN|Model|FM 모델|[링크](src/model/YN_Factorization_Matrix.ipynb)|
 |YN|Model|SVD 모델|[링크](src/model/YN_TripAdvisor_SVD_python.ipynb)|
+|YN|Model|Neural Collaborative Filtering 모델|[링크](src/model/YN_NCF.ipynb)|
+|YN|Model|Simple Algoritm Recommender 모델|[링크](src/model/YN_SAR_based_Recommder.ipynb)|
+|YN|Model|Wide and Deep 모델|[링크](src/model/YN_wide_deep.ipynb)|
 
 
 ## Getting Started
