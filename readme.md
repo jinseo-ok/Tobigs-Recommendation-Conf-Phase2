@@ -71,7 +71,7 @@ import src.data_prep.data_preprocessing as preprocessor
 
 
 prep = preprocessor.Preprocessor()
-df = prep.
+df = prep.clean_data(df, is_mulitprocess=False)
 ```
 <br>
 <br>
