@@ -21,9 +21,18 @@ class Preprocessor:
 
         return df.iloc[seoul_idx,:]
 
-        
 
 
+
+    # 위에서 만든 함수들 최종적 적용 후 전처리 완료 데이터 생성 
+    def clean_data(self, df, document_type = 'dataframe', is_mulitprocess=False):
+        if document_type == 'pickle':
+            df = pd.read_pickle(df)
+
+        # 서울 소재지 place 데이터
+        df = self.seoul_place(df)
+
+        return df
 
 
 if __name__ == "__main__":
@@ -34,7 +43,8 @@ if __name__ == "__main__":
     NAVER_PLACE_DATA_PATH = os.path.join("..","..","data","JS_05_reviews.pkl")
     df = pd.read_pickle(NAVER_PLACE_DATA_PATH)
 
-    df = preprocessor.seoul_place(df)
+    # 생성한 함수 적용 
+    df = preprocessor.clean_data(df, is_mulitprocess=False)
 
     print(df.head())
     print('elapsed time : {}'.format(time.time() - start_time))

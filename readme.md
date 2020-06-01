@@ -54,7 +54,27 @@ git pull
 git push
 ```
 
+## 데이터 전처리 함수
 
+| parameter     |                                                              |
+| :--------- | ------------------------------------------------------------ |
+| `df`    | `dataframe` or `list` &nbsp; 전처리를 진행할 문장이 들어 있는 dataframe이나 list 형태의 자료 구조. |
+| `is_mulitprocess`   | `boolean` &nbsp; 차후 전처리 할 때 멀티 프로세싱을 사용할 지 여부. default 값은 False이다.  |
+
+| return value|                                                              |
+| :---------- | ------------------------------------------------------------ |
+| `dataframe`    | 전처리가 완료된  dataframe |
+
+### 사용예 
+```
+import src.data_prep.data_preprocessing as preprocessor
+
+
+prep = preprocessor.Preprocessor()
+df = prep.
+```
+<br>
+<br>
 
 
 
