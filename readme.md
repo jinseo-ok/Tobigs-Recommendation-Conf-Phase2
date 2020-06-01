@@ -12,6 +12,10 @@
 |YN|Model|Neural Collaborative Filtering 모델|[링크](src/model/YN_NCF.ipynb)|
 |YN|Model|Simple Algoritm Recommender 모델|[링크](src/model/YN_SAR_based_Recommder.ipynb)|
 |YN|Model|Wide and Deep 모델|[링크](src/model/YN_wide_deep.ipynb)|
+|YN|Model|SAR 모델|[링크](src/model/YN_SAR_based_Recommender.ipynb)|
+|JB|Model|SAR 모델|[링크](src/model/JB_SAR.ipynb)|
+|JB|Model|SAR 모델|[링크](src/model/JB_SAR_v2.ipynb)|
+|HJ|Model|SAR 모델|[링크](src/model/HJ_autoencoder_collaborate_filtering.ipynb)|
 
 
 ## Getting Started
