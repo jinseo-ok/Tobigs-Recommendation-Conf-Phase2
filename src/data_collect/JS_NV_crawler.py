@@ -5,6 +5,27 @@ import lxml.html
 from bs4 import BeautifulSoup
 import pandas as pd
 
+# 트리바고 호텔 정보 가져오기
+headers = {
+    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36'
+    
+}
+def getGEO(data):
+    hotel_id = data['accommodation']['id']
+    name = data['accommodation']['name']
+    lat = data['accommodation']['geocode']['lat']
+    lng = data['accommodation']['geocode']['lng']
+    if data['accommodation'].get('address', 'none') == 'none':
+        country, addr, locality, poscal = None, None, None, None
+    else:
+        country = data['accommodation']['address'].get('country', None)
+        addr = data['accommodation']['address'].get('street', None)
+        locality = data['accommodation']['address'].get('locality', None)
+        poscal = data['accommodation']['address'].get('postalCode', None)
+    value = [hotel_id, name, lat, lng, country, addr, locality, poscal]
+    return value
+
+
 # 트리바고 호텔 위치 기반 주변 음식점 가져오기
 headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
@@ -88,4 +109,25 @@ def addv(x, idno):
     x['idno'] = idno
     return x
         
-    
+
+# place.address를 사용하여 위경도 구하기
+
+key = 'd1SvFCY9aQyWtAOaEWfOyur2YSCfyJZnKNJQ3FaN'
+headers = {
+    'X-NCP-APIGW-API-KEY-ID' : 'vasj6ueva4',
+    'X-NCP-APIGW-API-KEY' : 'd1SvFCY9aQyWtAOaEWfOyur2YSCfyJZnKNJQ3FaN'
+    }
+
+def NVgeocoding(addr):
+    url = f'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={addr}'
+    response = requests.get(url, headers = headers)
+    try:
+        result = json.loads(response.text)
+        jibun = result['addresses'][0]['jibunAddress']
+        road = result['addresses'][0].get('roadAddress', 'none')
+        y = float(result['addresses'][0]['y'])
+        x = float(result['addresses'][0]['x'])
+        value = [jibun, road, y, x]
+    except:
+        value = ['error', 'error', 0, 0]
+    return value
