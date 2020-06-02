@@ -12,6 +12,10 @@
 |YN|Model|Neural Collaborative Filtering 모델|[링크](src/model/YN_NCF.ipynb)|
 |YN|Model|Simple Algoritm Recommender 모델|[링크](src/model/YN_SAR_based_Recommder.ipynb)|
 |YN|Model|Wide and Deep 모델|[링크](src/model/YN_wide_deep.ipynb)|
+|YN|Model|SAR 모델|[링크](src/model/YN_SAR_based_Recommender.ipynb)|
+|JB|Model|SAR 모델|[링크](src/model/JB_SAR.ipynb)|
+|JB|Model|SAR 모델|[링크](src/model/JB_SAR_v2.ipynb)|
+|HJ|Model|SAR 모델|[링크](src/model/HJ_autoencoder_collaborate_filtering.ipynb)|
 
 
 ## Getting Started
@@ -54,7 +58,43 @@ git pull
 git push
 ```
 
+## 데이터 전처리 함수
+opt 1. (data_preprocessing.py)
+| parameter     |                                                              |
+| :--------- | ------------------------------------------------------------ |
+| `df`    | `dataframe` or `pickle` &nbsp; 전처리를 진행할 대이터가 들어 있는 dataframe이나 pickle 형태의 자료 구조. |
+| `is_mulitprocess`   | `boolean` &nbsp; 차후 전처리 할 때 멀티 프로세싱을 사용할 지 여부. default 값은 False이다.  |
 
+| return value|                                                              |
+| :---------- | ------------------------------------------------------------ |
+| `dataframe`    | 전처리가 완료된  dataframe |
+
+### 사용예 
+```
+import src.data_prep.data_preprocessing as preprocessor
+
+
+prep = preprocessor.Preprocessor()
+df = prep.clean_data(df, options=['all', 'model_data'],is_mulitprocess=False)
+```
+
+opt 2. (preprocessor.py)
+| parameter     |                                                              |
+| :--------- | ------------------------------------------------------------ |
+| `data_type`    | `dataframe` or `pickle` &nbsp; 전처리를 진행할 데이터가 들어 있는 dataframe이나 pickle 형태의 자료 구조. |
+| `cols`   | 데이터 반환값 칼럼 지정 |
+
+| return value|                                                              |
+| :---------- | ------------------------------------------------------------ |
+| `dataframe`    | 전처리가 완료된  dataframe |
+
+### 사용예 
+```
+cd src.data_prep
+python preprocessor.py --cols ['rating','visitCount','id','idno','visitedDate.date','place.id','place.name'] --data_type 'dataframe'
+```
+<br>
+<br>
 
 
 
