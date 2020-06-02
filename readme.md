@@ -15,7 +15,7 @@
 |YN|Model|SAR 모델|[링크](src/model/YN_SAR_based_Recommender.ipynb)|
 |JB|Model|SAR 모델|[링크](src/model/JB_SAR.ipynb)|
 |JB|Model|SAR 모델|[링크](src/model/JB_SAR_v2.ipynb)|
-|HJ|Model|SAR 모델|[링크](src/model/HJ_autoencoder_collaborate_filtering.ipynb)|
+|HJ|Model|autoencoder_collaborate_filtering 모델|[링크](src/model/HJ_autoencoder_collaborate_filtering.ipynb)|
 
 
 ## Getting Started
