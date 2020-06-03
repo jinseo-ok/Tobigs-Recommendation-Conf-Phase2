@@ -17,10 +17,10 @@ class cosim_item:
 
     def max_cosine_item(self, latent_vector, is_local):
         if is_local == 'local':
-            DATA_PATH = os.path.join("..","..","data","global_loss02.csv")
+            DATA_PATH = os.path.join("..","..","realtime_model","global_loss02.csv")
             latent_vector = pd.read_csv(DATA_PATH)
         elif is_local == 'global':
-            DATA_PATH = os.path.join("..","..","data","local_loss02.csv")
+            DATA_PATH = os.path.join("..","..","realtime_model","local_loss02.csv")
             latent_vector = pd.read_csv(DATA_PATH)
 
         sim = 0
@@ -41,10 +41,12 @@ class cosim_item:
 if __name__ == "__main__":
     import time
     start_time = time.time()
-    item_input = # 1차 추천 호텔 중 사용자가 선택한 호텔 입력 받기
-    sim = cosim_item(item_input, item_vocab_path= , item_name_path = os.path.join("..","..","data",'item_name.pickle'))
+    item_input = 0 # 1차 추천 호텔 중 사용자가 선택한 호텔 입력 받기
+    sim = cosim_item(item_input, 
+                        item_vocab_path= os.path.join("..","..","data",'vocab_locationId_global.pickle'), 
+                        item_name_path = os.path.join("..","..","data",'item_name.pickle'))
     
-    DATA_PATH = os.path.join("..","..","data","local_loss02.csv")
+    DATA_PATH = os.path.join("..","..","realtime_model","local_loss02.csv")
     latent_vector = pd.read_csv(DATA_PATH)
     output_item = sim.max_cosine_item(latent_vector, 'local')
 
