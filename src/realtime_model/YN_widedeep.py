@@ -33,6 +33,9 @@ class cosim_item:
                     max_i = i
             
         # 특정 열의 아이템 실제 id 가져오기.
+        ## 수정 필요 사항 ##
+        ## 1. top10. 뽑기
+        ## 2. filter 받아 accomodate 제외
         similar_item_idx = [item_id for item_id, idx in self.item_vocab.items() if idx == max_i]
         similar_item = self.item_name[similar_item_idx]
         return similar_item
@@ -43,11 +46,11 @@ if __name__ == "__main__":
     start_time = time.time()
     item_input = 0 # 1차 추천 호텔 중 사용자가 선택한 호텔 입력 받기
     sim = cosim_item(item_input, 
-                        item_vocab_path= os.path.join("..","..","data",'vocab_locationId_global.pickle'), 
+                        item_vocab_path= os.path.join("..","..","realtime_model",'vocab_locationId_global.pickle'), 
                         item_name_path = os.path.join("..","..","data",'item_name.pickle'))
     
-    DATA_PATH = os.path.join("..","..","realtime_model","local_loss02.csv")
+    DATA_PATH = os.path.join("..","..","realtime_model","global_loss02.csv")
     latent_vector = pd.read_csv(DATA_PATH)
-    output_item = sim.max_cosine_item(latent_vector, 'local')
+    output_item = sim.max_cosine_item(latent_vector, 'global')
 
     print('elapsed time : {}'.format(time.time() - start_time))

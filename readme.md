@@ -105,9 +105,9 @@ import src.realtime_model.YN_widedeep as widedeep
 
 # input_item : 1차 결과 아웃풋 중 사용자에게 선택받은 아이템 입력
 wd = widedeep.cosim_item(item_input, 
-                        item_vocab_path= os.path.join("..","..","data",'item_name.pickle'), 
+                        item_vocab_path= os.path.join("..","..","realtime_model",'vocab_locationId_global.pickle'), 
                         item_name_path = os.path.join("..","..","data",'item_name.pickle'))
-output_item = wd.max_cosine_item(latent_vector, 'local')
+output_item = wd.max_cosine_item(latent_vector, 'global')
 ```
 
 
