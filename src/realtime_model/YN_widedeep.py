@@ -45,11 +45,11 @@ class cosim_item:
             
         # 특정 열의 아이템 실제 id 가져오기.
         ## 수정 필요 사항 ##
-        ## 1. top10. 뽑기
-        ## 2. filter 받아 accomodate 제외
+        ## 1. top10. 뽑기 -> 상위 10개 어떻게 담아야 효율적일 지 모르겠음....
+        ## 2. filter 받아 accomodate 제외  -> 10개 담으면 식당 id 만 뽑게끔 식당 item_id 이름 매칭한 데이터 만들어뒀음.
         similar_item_idx = [item_id for item_id, idx in self.item_vocab.items() if idx == max_i]
         similar_item = self.item_name[similar_item_idx]
-        return similar_item
+        return similar_item 
 
 
 if __name__ == "__main__":
