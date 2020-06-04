@@ -97,6 +97,18 @@ python preprocessor.py --cols ['rating','visitCount','id','idno','visitedDate.da
 <br>
 
 
+## Real Model 
+
+1차 추천 모델 결과 (아이템) 인풋 넣으면 결과 (가장 유사도 높은 아이템 추천) 나오는 모델
+```
+import src.realtime_model.YN_widedeep as widedeep
+
+# input_item : 1차 결과 아웃풋 중 사용자에게 선택받은 아이템 입력
+wd = widedeep.cosim_item(item_input, 
+                        item_vocab_path= os.path.join("..","..","realtime_model",'vocab_locationId_global.pickle'), 
+                        item_name_path = os.path.join("..","..","data",'item_name.pickle'))
+output_item = wd.max_cosine_item(latent_vector, 'global')
+```
 
 
 
