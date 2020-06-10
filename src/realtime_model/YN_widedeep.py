@@ -4,23 +4,34 @@ from sklearn.metrics.pairwise import cosine_similarity
 from tqdm.notebook import tqdm
 import pickle
 import os 
+import json
+
+# VOCAB_PATH = os.path.join("..","..","realtime_model",'vocab_locationId_global.pickle')
+# ITEM_PATH = os.path.join("..","..","data",'item_name.pickle')
+# DATA_PATH = os.path.join("..","..","realtime_model","global_loss02.csv")
+
+VOCAB_PATH = "vocab_locationId_global.json"
+ITEM_PATH = "item_name.pickle"
+DATA_PATH = "global_loss02.csv"
+
+realtime_path_gen = lambda x: os.path.join("..","..","realtime_model", x)
 
 
 class cosim_item:
     def __init__(self, item_input = None, item_vocab_path = None, item_name_path = None):
         self.item_input = item_input
         # int 변환 임베딩 item idx 저장값 불러오기
-        self.item_vocab = pickle.load(open(item_vocab_path,"rb"))
+        self.item_vocab = json.load(open(item_vocab_path,"rb"))
         # item name & item idx 매칭 저장값 불러오기
         self.item_name = pickle.load(open(item_name_path,"rb"))
 
 
     def max_cosine_item(self, latent_vector, is_local):
         if is_local == 'local':
-            DATA_PATH = os.path.join("..","..","realtime_model","global_loss02.csv")
+            DATA_PATH = realtime_path_gen("global_loss02.csv")
             latent_vector = pd.read_csv(DATA_PATH)
         elif is_local == 'global':
-            DATA_PATH = os.path.join("..","..","realtime_model","local_loss02.csv")
+            DATA_PATH = realtime_path_gen("local_loss02.csv")
             latent_vector = pd.read_csv(DATA_PATH)
 
         sim = 0
@@ -46,10 +57,9 @@ if __name__ == "__main__":
     start_time = time.time()
     item_input = 0 # 1차 추천 호텔 중 사용자가 선택한 호텔 입력 받기
     sim = cosim_item(item_input, 
-                        item_vocab_path= os.path.join("..","..","realtime_model",'vocab_locationId_global.pickle'), 
-                        item_name_path = os.path.join("..","..","data",'item_name.pickle'))
+                    item_vocab_path= VOCAB_PATH, 
+                    item_name_path = ITEM_PATH)
     
-    DATA_PATH = os.path.join("..","..","realtime_model","global_loss02.csv")
     latent_vector = pd.read_csv(DATA_PATH)
     output_item = sim.max_cosine_item(latent_vector, 'global')
 

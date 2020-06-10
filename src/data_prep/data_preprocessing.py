@@ -24,7 +24,7 @@ class Preprocessor:
 
 
     # 위에서 만든 함수들 최종적 적용 후 전처리 완료 데이터 생성 
-    def clean_data(self, df, options=['all', 'model_data'], data_type = 'dataframe', is_mulitprocess=False):
+    def clean_data(self, df, options=['all', 'model_data'], document_type = 'dataframe', is_mulitprocess=False):
         if data_type == 'pickle':
             NAVER_PLACE_DATA_PATH = os.path.join("..","..","data","JS_05_reviews.pkl")
             df = pd.read_csv(NAVER_PLACE_DATA_PATH)
