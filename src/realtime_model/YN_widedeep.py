@@ -1,66 +1,78 @@
 import re
 import pandas as pd
-from sklearn.metrics.pairwise import cosine_similarity
 from tqdm.notebook import tqdm
 import pickle
 import os 
 import json
+from keras.models import model_from_json 
+from numpy import dot
+from numpy.linalg import norm
+import numpy as np
+import random
+import argparse
+import tensorflow as tf
+from keras.models import *
 
-# VOCAB_PATH = os.path.join("..","..","realtime_model",'vocab_locationId_global.pickle')
-# ITEM_PATH = os.path.join("..","..","data",'item_name.pickle')
-# DATA_PATH = os.path.join("..","..","realtime_model","global_loss02.csv")
-
-VOCAB_PATH = "vocab_locationId_global.json"
-ITEM_PATH = "item_name.pickle"
-DATA_PATH = "global_loss02.csv"
-
-realtime_path_gen = lambda x: os.path.join("..","..","realtime_model", x)
-
-
-class cosim_item:
-    def __init__(self, item_input = None, item_vocab_path = None, item_name_path = None):
-        self.item_input = item_input
-        # int 변환 임베딩 item idx 저장값 불러오기
-        self.item_vocab = json.load(open(item_vocab_path,"rb"))
-        # item name & item idx 매칭 저장값 불러오기
-        self.item_name = pickle.load(open(item_name_path,"rb"))
+parser = argparse.ArgumentParser(description='wide_and_deep_model')
+parser.add_argument('--local_gloabal', default= None , help='is local or gloabal?')
+parser.add_argument('--path', default=os.path.join("..","realtime_model"), help='no model path')
+parser.add_argument('--item_id', default=None, type = int, help='no item_id')
+parser.add_argument('--top', default=None, type = int, help='how many top list do you want?')
+args = parser.parse_args()
 
 
-    def max_cosine_item(self, latent_vector, is_local):
-        if is_local == 'local':
-            DATA_PATH = realtime_path_gen("global_loss02.csv")
-            latent_vector = pd.read_csv(DATA_PATH)
-        elif is_local == 'global':
-            DATA_PATH = realtime_path_gen("local_loss02.csv")
-            latent_vector = pd.read_csv(DATA_PATH)
-
-        sim = 0
-        max_i = 0
-        if self.item_input:
-            item_idx = self.item_vocab[self.item_input]
-            for i in tqdm(range(latent_vector.shape[1])):
-                if sim < cosine_similarity(latent_vector.iloc[:,item_idx], latent_vector.iloc[:,i]):
-                    sim = cosine_similarity(latent_vector.iloc[:,item_idx], latent_vector.iloc[:,i])
-                    max_i = i
-            
-        # 특정 열의 아이템 실제 id 가져오기.
-        ## 수정 필요 사항 ##
-        ## 1. top10. 뽑기 -> 상위 10개 어떻게 담아야 효율적일 지 모르겠음....
-        ## 2. filter 받아 accomodate 제외  -> 10개 담으면 식당 id 만 뽑게끔 식당 item_id 이름 매칭한 데이터 만들어뒀음.
-        similar_item_idx = [item_id for item_id, idx in self.item_vocab.items() if idx == max_i]
-        similar_item = self.item_name[similar_item_idx]
-        return similar_item 
-
-
-if __name__ == "__main__":
-    import time
-    start_time = time.time()
-    item_input = 0 # 1차 추천 호텔 중 사용자가 선택한 호텔 입력 받기
-    sim = cosim_item(item_input, 
-                    item_vocab_path= VOCAB_PATH, 
-                    item_name_path = ITEM_PATH)
+def cosim_id(df, vec, item_id):
+    def cos_sim(A, B):
+           return dot(A, B)/(norm(A)*norm(B)) 
+    new_vec = vec.copy() 
+    sim = []
     
-    latent_vector = pd.read_csv(DATA_PATH)
-    output_item = sim.max_cosine_item(latent_vector, 'global')
+    # 인풋 호텔 정보 데이터에 없는 경우 종료 
+    if item_id not in vec.index.tolist():
+        return 
+        
+    for i in range(len(vec)):
+        sim.append(cos_sim(vec.loc[args.item_id,:], vec.iloc[i,:]))
 
-    print('elapsed time : {}'.format(time.time() - start_time))
+    new_vec['sim'] = sim
+    # sim 높은 순 
+    new_vec = new_vec['sim'].reset_index().sort_values('sim', ascending=False)
+    sim_sorted = new_vec['locationId'].tolist()
+    # 인풋 호텔정보 빼고 유사도 높은 순대로 id 
+    if item_id in sim_sorted:
+        sim_sorted.remove(args.item_id) 
+    return sim_sorted 
+
+
+def sim_item(vec, df, item_id, top):
+    top_id = cosim_id(df, vec, args.item_id)
+    
+    if type(top_id) == list :
+        df = df.drop_duplicates(['locationId'], keep='last')
+        recommend_rst = []
+        for x in top_id:
+            if df.loc[df['locationId']==x].category.values[0]== 'EAT':
+                recommend_rst.append([df.loc[df['locationId']==x][['place.name', 'land.addr']]])
+
+        print('input hotel:', df.loc[df['locationId']==item_id]['place.name'].unique()[0])
+        print('-'*10)
+        for i in range(len(recommend_rst[:top])):
+            print('top', i+1, recommend_rst[i][0]['place.name'].values[0])
+            print('  주소', recommend_rst[i][0]['land.addr'].values[0])
+        
+    else:
+        answer_lst = ['해당 호텔 정보가 없습니다. 다른 호텔을 입력해주세요.', '해당 호텔 정보가 없습니다. 다른 호텔을 추천받아보세요.']
+        x = random.randint(0, len(answer_lst)-1)
+        return answer_lst[x]
+    
+            
+
+if __name__ == '__main__':
+
+    df = pd.read_csv(os.path.join(args.path,(args.local_gloabal+'_df.csv')))
+    vec = pd.read_csv(os.path.join(args.path,('wnd_'+args.local_gloabal+'_vec.csv')))
+    vec.index = vec['locationId']
+    vec = vec.drop(columns = ['locationId'], axis=1)
+
+    print(sim_item(vec, df, args.item_id, args.top))
+    
