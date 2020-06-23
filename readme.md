@@ -60,58 +60,27 @@ git pull
 git push
 ```
 
-## 데이터 전처리 함수
-opt 1. (data_preprocessing.py)
-| parameter     |                                                              |
-| :--------- | ------------------------------------------------------------ |
-| `df`    | `dataframe` or `pickle` &nbsp; 전처리를 진행할 대이터가 들어 있는 dataframe이나 pickle 형태의 자료 구조. |
-| `is_mulitprocess`   | `boolean` &nbsp; 차후 전처리 할 때 멀티 프로세싱을 사용할 지 여부. default 값은 False이다.  |
-
-| return value|                                                              |
-| :---------- | ------------------------------------------------------------ |
-| `dataframe`    | 전처리가 완료된  dataframe |
-
-### 사용예 
-```
-import src.data_prep.data_preprocessing as preprocessor
-
-
-prep = preprocessor.Preprocessor()
-df = prep.clean_data(df, options=['all', 'model_data'],is_mulitprocess=False)
-```
-
-opt 2. (preprocessor.py)
-| parameter     |                                                              |
-| :--------- | ------------------------------------------------------------ |
-| `data_type`    | `dataframe` or `pickle` &nbsp; 전처리를 진행할 데이터가 들어 있는 dataframe이나 pickle 형태의 자료 구조. |
-| `cols`   | 데이터 반환값 칼럼 지정 |
-
-| return value|                                                              |
-| :---------- | ------------------------------------------------------------ |
-| `dataframe`    | 전처리가 완료된  dataframe |
-
-### 사용예 
-```
-cd src.data_prep
-python preprocessor.py --cols ['rating','visitCount','id','idno','visitedDate.date','place.id','place.name'] --data_type 'dataframe'
-```
-<br>
-<br>
-
-
 ## Real Model 
+YN_model.py
 
-1차 추천 모델 결과 (아이템) 인풋 넣으면 결과 (가장 유사도 높은 아이템 추천) 나오는 모델
+| parameter     |                                                              |
+| :--------- | ------------------------------------------------------------ |
+| `local_gloabal`    | local을 추천받을지 global 추천받을지 |
+| `model`   | `wnd` or `deepFM` &nbsp; 사용할 모델 지정. |
+| `path`   | local_df, global_df, vec이 존재하는 경로 |
+| `item_id`   | `int` &nbsp; 1차 추천 호텔 리스트 중 사용자가 선택한 호텔 id 
+| `top`   | `int` &nbsp; 상위 몇개의 유사 아이템을 추천받을지. default 값은 10이다.  |
+
+
+| return value|                                                              |
+| :---------- | ------------------------------------------------------------ |
+| top n 개의 유사 아이템(식당) 이름 및 주소|
+
+### 사용예 
+main.ipynb 참조 
 ```
-import src.realtime_model.YN_widedeep as widedeep
-
-# input_item : 1차 결과 아웃풋 중 사용자에게 선택받은 아이템 입력
-wd = widedeep.cosim_item(item_input, 
-                        item_vocab_path= os.path.join("..","..","realtime_model",'vocab_locationId_global.pickle'), 
-                        item_name_path = os.path.join("..","..","data",'item_name.pickle'))
-output_item = wd.max_cosine_item(latent_vector, 'global')
+! python YN_model.py --local_gloabal 'local' --model 'wnd' --path "../realtime_model" --item_id 3477158 --top 10
 ```
-
 
 
 

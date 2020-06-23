@@ -18,7 +18,7 @@ parser.add_argument('--local_gloabal', default= None , help='is local or gloabal
 parser.add_argument('--model', default= None , help='which model?')
 parser.add_argument('--path', default=os.path.join("..","realtime_model"), help='no model path')
 parser.add_argument('--item_id', default=None, type = int, help='no item_id')
-parser.add_argument('--top', default=None, type = int, help='how many top list do you want?')
+parser.add_argument('--top', default=10, type = int, help='how many top list do you want?')
 args = parser.parse_args()
 
 
