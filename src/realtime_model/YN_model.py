@@ -13,8 +13,9 @@ import argparse
 import tensorflow as tf
 from keras.models import *
 
-parser = argparse.ArgumentParser(description='wide_and_deep_model')
+parser = argparse.ArgumentParser(description='model show outputs')
 parser.add_argument('--local_gloabal', default= None , help='is local or gloabal?')
+parser.add_argument('--model', default= None , help='which model?')
 parser.add_argument('--path', default=os.path.join("..","realtime_model"), help='no model path')
 parser.add_argument('--item_id', default=None, type = int, help='no item_id')
 parser.add_argument('--top', default=None, type = int, help='how many top list do you want?')
@@ -70,7 +71,7 @@ def sim_item(vec, df, item_id, top):
 if __name__ == '__main__':
 
     df = pd.read_csv(os.path.join(args.path,(args.local_gloabal+'_df.csv')))
-    vec = pd.read_csv(os.path.join(args.path,('wnd_'+args.local_gloabal+'_vec.csv')))
+    vec = pd.read_csv(os.path.join(args.path,(args.model+'_'+args.local_gloabal+'_vec.csv')))
     vec.index = vec['locationId']
     vec = vec.drop(columns = ['locationId'], axis=1)
 
