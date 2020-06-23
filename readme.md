@@ -12,9 +12,8 @@
 |YN|Model|Neural Collaborative Filtering 모델|[링크](src/model/YN_NCF.ipynb)|
 |YN|Model|Simple Algoritm Recommender 모델|[링크](src/model/YN_SAR_based_Recommder.ipynb)|
 |YN|Model|Wide and Deep 모델|[링크](src/model/YN_wide_deep.ipynb)|
-|YN|Model|Wide and Deep 모델|[링크](src/model/YN_wide_deep_all.ipynb)|
-|YN|Model|SAR 모델|[링크](src/model/YN_SAR_based_Recommender.ipynb)|
-|YN|Model|VAE CF 모델|[링크](src/model/YN_vaecf.ipynb)|
+|YN|Model|Wide and Deep all 모델|[링크](src/model/YN_wide_deep_all.ipynb)|
+|YN|Model|deepFM 모델|[링크](src/model/YN_deepFM_keras.ipynb)|
 |JB|Model|SAR 모델|[링크](src/model/JB_SAR.ipynb)|
 |JB|Model|SAR 모델|[링크](src/model/JB_SAR_v2.ipynb)|
 |HJ|Model|autoencoder_collaborate_filtering 모델|[링크](src/model/HJ_autoencoder_collaborate_filtering.ipynb)|
@@ -72,8 +71,8 @@ YN_model.py
 | `top`   | `int` &nbsp; 상위 몇개의 유사 아이템을 추천받을지. default 값은 10이다.  |
 
 
-| return value|                                                              |
-| :---------- | ------------------------------------------------------------ |
+| return value|                                                              
+| :---------- | 
 | top n 개의 유사 아이템(식당) 이름 및 주소|
 
 ### 사용예 
