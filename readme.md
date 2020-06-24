@@ -14,6 +14,7 @@
 |YN|Model|Wide and Deep 모델|[링크](src/model/YN_wide_deep.ipynb)|
 |YN|Model|Wide and Deep all 모델|[링크](src/model/YN_wide_deep_all.ipynb)|
 |YN|Model|deepFM 모델|[링크](src/model/YN_deepFM_keras.ipynb)|
+|YN|Model|AFM 모델|[링크](src/model/YN_AFM)|
 |JB|Model|SAR 모델|[링크](src/model/JB_SAR.ipynb)|
 |JB|Model|SAR 모델|[링크](src/model/JB_SAR_v2.ipynb)|
 |HJ|Model|autoencoder_collaborate_filtering 모델|[링크](src/model/HJ_autoencoder_collaborate_filtering.ipynb)|
