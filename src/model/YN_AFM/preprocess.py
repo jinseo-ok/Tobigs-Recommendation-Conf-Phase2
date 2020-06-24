@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 import os
 
-file = pd.read_csv(os.path.join("data","YN_afm_df.csv"))
+file = pd.read_csv(os.path.join("..","..","data","YN_afm_df.csv"))
 X = file.iloc[:, 0:9]
 Y = file.iloc[:, 9]
 

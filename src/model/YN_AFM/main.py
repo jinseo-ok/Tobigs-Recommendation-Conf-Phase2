@@ -15,9 +15,9 @@ args = parser.parse_args()
 
 if __name__ == '__main__':
     # 모델 불러오기 
-    model = load_model(os.path.join("data",".h5"))
+    model = load_model(os.path.join("..","..","data",".h5"))
 
-    locationinfo = pd.read_csv(os.path.join("data","locationsinfo.csv"))
+    locationinfo = pd.read_csv(os.path.join("..","..","data","locationsinfo.csv"))
     df = locationinfo.drop(columns=['place.name'], axis=1)
     df['user_visit_history'] = 0
     # 가본 호텔 또는 좋아하는 호텔에 가중치 부여 (user_visit_history)

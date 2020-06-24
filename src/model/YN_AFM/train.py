@@ -11,7 +11,7 @@ from time import perf_counter
 import os
 
 def get_data():
-    file = pd.read_csv(os.path.join("data","YN_afm_df.csv"))
+    file = pd.read_csv(os.path.join("..","..","data","YN_afm_df.csv"))
     X = file.iloc[:, 0:9]
     Y = file.iloc[:, 9] 
 
