@@ -55,4 +55,6 @@ class AFM(tf.keras.Model):
         # y_pred = tf.nn.sigmoid(y_pred)
 
         return y_pred
+        # return self.w
+
 

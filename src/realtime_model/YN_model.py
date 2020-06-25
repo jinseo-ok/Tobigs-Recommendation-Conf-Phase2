@@ -70,7 +70,7 @@ def sim_item(vec, df, item_id, top):
 
 if __name__ == '__main__':
 
-    df = pd.read_csv(os.path.join(args.path,(args.local_gloabal+'_df.csv')))
+    df = pd.read_csv(os.path.join(args.path,(args.local_gloabal+'_df('+ args.model+').csv')))
     vec = pd.read_csv(os.path.join(args.path,(args.model+'_'+args.local_gloabal+'_vec.csv')))
     vec.index = vec['locationId']
     vec = vec.drop(columns = ['locationId'], axis=1)

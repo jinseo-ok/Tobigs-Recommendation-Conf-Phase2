@@ -1,12 +1,11 @@
 # Configuration File
 # 모든 칼럼 이름, 연속형 변수/범주형 변수 목록을 List로 저장한다.
-ORIGINAL_FIELDS = ['locationId', 'createdDate', 'is_fch', 
+ORIGINAL_FIELDS = ['locationId',  'is_fch', 
         'is_local', 'rated_count',
-       'average_photonum', 'average_rating', 'category_l',
-       'user_visit_history']
+       'average_photonum', 'average_rating', 'category_l']
 
-CONT_FIELDS = ['locationId', 'createdDate',
-       'rated_count', 'average_photonum', 'average_rating', 'user_visit_history']
+CONT_FIELDS = ['locationId', 
+       'rated_count', 'average_photonum', 'average_rating']
 
 CAT_FIELDS = ['is_fch', 'category_l', 'is_local']  
 

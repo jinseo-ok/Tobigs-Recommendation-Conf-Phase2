@@ -9,25 +9,34 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.metrics import MeanSquaredError
 from time import perf_counter
 import os
+import argparse
+
+
+parser = argparse.ArgumentParser(description='afm')
+parser.add_argument('--epochs', type= int, default= 50, help='') 
+parser.add_argument('--lr', type= float, default= 1e-3, help='') 
+args = parser.parse_args()
 
 def get_data():
-    file = pd.read_csv(os.path.join("..","..","data","YN_afm_df.csv"))
-    X = file.iloc[:, 0:9]
-    Y = file.iloc[:, 9] 
+    train = pd.read_csv(os.path.join("..","..","data","YN_afm_df2.csv"))
+    test = pd.read_csv(os.path.join("..","..","data","locationsinfo.csv"))
+    test = test.drop(columns=['place.name'], axis=1)
+    X_train = train.iloc[:, 0:7]
+    X_test = test.iloc[:, 0:7]
+    Y_train = train.iloc[:, 7] 
+    # Y_test = [0]*test.shape[0]
 
-    X.columns = config.ORIGINAL_FIELDS
-    X_modified, num_feature = get_modified_data(X, config.CONT_FIELDS, config.CAT_FIELDS)
-
-    # return X_modified
-
-    X_train, X_test, Y_train, Y_test = train_test_split(X_modified, Y, test_size=0.2)
+    X_train.columns = config.ORIGINAL_FIELDS
+    X_train_modified, num_feature_train = get_modified_data(X_train, config.CONT_FIELDS, config.CAT_FIELDS)
+    X_test_modified, num_feature_test = get_modified_data(X_test, config.CONT_FIELDS, config.CAT_FIELDS)
+    num_feature = num_feature_train #+ num_feature_test
 
     train_ds = tf.data.Dataset.from_tensor_slices(
-        (tf.cast(X_train.values, tf.float32), tf.cast(Y_train, tf.float32))) \
+        (tf.cast(X_train_modified.values, tf.float32), tf.cast(Y_train, tf.float32))) \
         .shuffle(30000).batch(config.BATCH_SIZE)
 
     test_ds = tf.data.Dataset.from_tensor_slices(
-        (tf.cast(X_test.values, tf.float32), tf.cast(Y_test, tf.float32))) \
+        (tf.cast(X_test_modified.values, tf.float32))) \
         .shuffle(10000).batch(config.BATCH_SIZE)
 
     return train_ds, test_ds, num_feature
@@ -58,7 +67,7 @@ def train(epochs):
     model = AFM(config.NUM_FIELD, num_feature, config.NUM_CONT,
                 config.EMBEDDING_SIZE, config.HIDDEN_SIZE)
 
-    optimizer = tf.keras.optimizers.SGD(learning_rate=0.01)
+    optimizer = tf.keras.optimizers.SGD(learning_rate=args.lr)
 
     print("Start Training: Batch Size: {}, Embedding Size: {}, Hidden Size: {}".\
         format(config.BATCH_SIZE, config.EMBEDDING_SIZE, config.HIDDEN_SIZE))
@@ -70,24 +79,21 @@ def train(epochs):
         for x, y in train_ds:
             loss = train_on_batch(model, optimizer, mse, x, y)
             loss_history.append(loss)
-
+ 
         print("Epoch {:03d}: 누적 Loss: {:.4f}, mse: {:.4f}".format(
             i, np.mean(loss_history), mse.result().numpy()))
 
-    test_mse = MeanSquaredError()
-    for x, y in test_ds:
-        y_pred = model(x)
-        test_mse.update_state(y, y_pred)
+    y_preds = []
+    for x in test_ds:
+        y_preds.append(model(x))
 
-    print("테스트 mse: {:.4f}".format(test_mse.result().numpy()))
-    print("Batch Size: {}, Embedding Size: {}, Hidden Size: {}".format(
-        config.BATCH_SIZE, config.EMBEDDING_SIZE, config.HIDDEN_SIZE))
-    print("걸린 시간: {:.3f}".format(perf_counter() - start))
-    model.save_weights('weights/weights-epoch({})-batch({})-embedding({})-hidden({}).h5'.format(
-        epochs, config.BATCH_SIZE, config.EMBEDDING_SIZE, config.HIDDEN_SIZE))
+    return y_preds
 
-    return model
 
 
 if __name__ == '__main__':
-    model = train(epochs=50)  
+    y_preds = train(epochs=args.epochs)  
+    locationsinfo = pd.read_csv(os.path.join("..","..","data","locationsinfo.csv"))
+    locationsinfo['rating'] = y_preds
+    locationsinfo.to_csv(os.path.join("..","..","data","locationsinfo_preds.csv"), index=False)
+    print('save locationsinfo_preds')
