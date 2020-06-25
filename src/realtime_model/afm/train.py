@@ -9,7 +9,6 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.metrics import MeanSquaredError
 from time import perf_counter
 import os
-import json
 
 def get_data():
     file = pd.read_csv(os.path.join("..","..","data","YN_afm_df.csv"))
@@ -84,17 +83,9 @@ def train(epochs):
     print("Batch Size: {}, Embedding Size: {}, Hidden Size: {}".format(
         config.BATCH_SIZE, config.EMBEDDING_SIZE, config.HIDDEN_SIZE))
     print("걸린 시간: {:.3f}".format(perf_counter() - start))
-    # lets assume `model` is main model 
-    # model architecture save
-    model_json = model.to_json()
-    with open('weights/weights-epoch({})-batch({})-embedding({})-hidden({}).json'.format(
-        epochs, config.BATCH_SIZE, config.EMBEDDING_SIZE, config.HIDDEN_SIZE), "w") as json_file:
-        json.dump(model_json, json_file)
-    # model save
     model.save_weights('weights/weights-epoch({})-batch({})-embedding({})-hidden({}).h5'.format(
         epochs, config.BATCH_SIZE, config.EMBEDDING_SIZE, config.HIDDEN_SIZE))
-    
-    return model
+
     return model
 
 

@@ -1,21 +1,28 @@
-from train import train
+from afm.train import train
 import argparse
-from preprocess import get_modified_data
+from afm.preprocess import get_modified_data
 import pandas as pd 
 import os
-import config
+from afm import config
 import tensorflow as tf
 from keras.models import load_model
+from keras.models import model_from_json
+import json
 
 parser = argparse.ArgumentParser(description='afm')
 parser.add_argument('--visited_ids', default= None, help='') 
-parser.add_argument('--top_n', default= 10, help='')
+parser.add_argument('--top_n', type = int,  default= 10, help='')
+parser.add_argument('--only_new', type='str', default= 'yes', help='')
 args = parser.parse_args()
 
 
 if __name__ == '__main__':
     # 모델 불러오기 
-    model = load_model(os.path.join("..","..","data",".h5"))
+    with open(os.path.join("..","YN_AFM", "weights" ,'weights-epoch(50)-batch(2560)-embedding(10)-hidden(64).json','r')) as f:
+    model_json = json.load(f)
+
+    model = model_from_json(model_json)
+    model.load_weights(os.path.join("..","YN_AFM", "weights", "weights-epoch(50)-batch(2560)-embedding(10)-hidden(64).h5"))
 
     locationinfo = pd.read_csv(os.path.join("..","..","data","locationsinfo.csv"))
     df = locationinfo.drop(columns=['place.name'], axis=1)
@@ -28,7 +35,7 @@ if __name__ == '__main__':
     test_x = tf.data.Dataset.from_tensor_slices(
         (tf.cast(X_modified.values, tf.float32))).shuffle(10000).batch(config.BATCH_SIZE)
     
-    y_preds = []
+    y_preds = [] 
     for x in test_x: 
         y_pred = model(test_x)
         y_preds.append(y_pred)
@@ -37,7 +44,12 @@ if __name__ == '__main__':
     # 예측 rating , 평균 평점 높은 순 
     df = df.sort_values(by = ['y_pred','average_rating'], ascending=False)
     visit_idx = df.loc[df['user_visit_history']!=0].index 
-    df = df.drop(columns = ['visit_idx'], axis=1)
+    # 가본 곳 제외하고 추천 받을지 
+    if args.only_new == 'yes':
+        df = df.drop(columns = ['visit_idx'], axis=1) 
+    else:
+        df = df
+    df = df.loc[df['category_l']==0]
     top_ids = df.head(args.top_n)['locationId'] 
     top_names = locationinfo.loc[locationinfo['locationdId'].isin(top_ids)]['place.name'].tolist()
     
