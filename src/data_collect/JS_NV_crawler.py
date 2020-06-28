@@ -27,10 +27,6 @@ def getGEO(data):
 
 
 # 트리바고 호텔 위치 기반 주변 음식점 가져오기
-headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
-}
-
 def getPlaces(item_id, lat, lng):
     for i in range(1,5):
         try:
