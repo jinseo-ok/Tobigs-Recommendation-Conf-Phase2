@@ -12,10 +12,8 @@ import random
 import argparse
 import tensorflow as tf
 from keras.models import *
-
+ 
 parser = argparse.ArgumentParser(description='model show outputs')
-parser.add_argument('--local_gloabal', default= None , help='is local or gloabal?')
-parser.add_argument('--model', default= None , help='which model?')
 parser.add_argument('--path', default=os.path.join("..","realtime_model"), help='no model path')
 parser.add_argument('--item_id', default=None, type = int, help='no item_id')
 parser.add_argument('--top', default=10, type = int, help='how many top list do you want?')
@@ -55,11 +53,12 @@ def sim_item(vec, df, item_id, top):
             if df.loc[df['locationId']==x].category.values[0]== 'EAT':
                 recommend_rst.append([df.loc[df['locationId']==x][['place.name', 'land.addr']]])
 
-        print('input hotel:', df.loc[df['locationId']==item_id]['place.name'].unique()[0])
-        print('-'*10)
-        for i in range(len(recommend_rst[:top])):
-            print('top', i+1, recommend_rst[i][0]['place.name'].values[0])
-            print('  주소', recommend_rst[i][0]['land.addr'].values[0])
+        # print('input hotel:', df.loc[df['locationId']==item_id]['place.name'].unique()[0])
+        # print('-'*10)
+        # for i in range(len(recommend_rst[:top])):
+        #     print('top', i+1, recommend_rst[i][0]['place.name'].values[0])
+        #     print('  주소', recommend_rst[i][0]['land.addr'].values[0])
+        return recommend_rst[:top]
         
     else:
         answer_lst = ['해당 호텔 정보가 없습니다. 다른 호텔을 입력해주세요.', '해당 호텔 정보가 없습니다. 다른 호텔을 추천받아보세요.']
@@ -69,11 +68,27 @@ def sim_item(vec, df, item_id, top):
             
 
 if __name__ == '__main__':
-
-    df = pd.read_csv(os.path.join(args.path,(args.local_gloabal+'_df('+ args.model+').csv')))
-    vec = pd.read_csv(os.path.join(args.path,(args.model+'_'+args.local_gloabal+'_vec.csv')))
-    vec.index = vec['locationId']
-    vec = vec.drop(columns = ['locationId'], axis=1)
-
-    print(sim_item(vec, df, args.item_id, args.top))
+    wnd_df = pd.read_csv(os.path.join(args.path,('global_df(wnd)2.csv')))
+    deepfm_df = pd.read_csv(os.path.join(args.path,('global_df(deepFM).csv')))
     
+    wnd_vec = pd.read_csv(os.path.join(args.path,('wnd_global_vec.csv')))
+    deepfm_vec = pd.read_csv(os.path.join(args.path,('deepFM_global_vec.csv')))
+    wnd_vec.index = wnd_vec['locationId']
+    wnd_vec = wnd_vec.drop(columns = ['locationId'], axis=1)
+    deepfm_vec.index = deepfm_vec['locationId']
+    deepfm_vec = deepfm_vec.drop(columns = ['locationId'], axis=1)
+
+    wnd = sim_item(wnd_vec, wnd_df, args.item_id, args.top)
+    deepfm = sim_item(deepfm_vec, deepfm_df, args.item_id, args.top)
+    print('------wnd------')
+    print(wnd)
+    print('------deepfm------')
+    print(deepfm)
+    # recsys_lst = wnd.append(deepfm)
+    # recsys_lst = list(set(recsys_lst))
+    
+    # print('input hotel:', wnd_df.loc[wnd_df['locationId']==args.item_id]['place.name'].unique()[0])
+    # print('-'*10)
+    # for i in range(len(random.sample(recsys_lst, args.top))):
+    #     print('top', i+1, recsys_lst[i][0]['place.name'].values[0])
+    #     print('  주소', recsys_lst[i][0]['land.addr'].values[0])
